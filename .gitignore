@@ -6,20 +6,80 @@ Thumbs.db
 .vscode/
 .idea/
 *.swp
+*.swo
 
-# Build artifacts
-dist/
-build/
+# Python
 __pycache__/
 *.pyc
-*.class
-
-# Dependencies
-node_modules/
-vendor/
-
-# Environment
+*.pyo
+*.egg-info/
+.eggs/
+dist/
+build/
+*.so
+.venv/
+venv/
 .env
 .env.*
 !.env.example
-scripts/auto_commit.sh
+
+# Rust
+src/rust/target/
+src/rust/Cargo.lock
+
+# Go
+src/go/vendor/
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+src/go/bin/
+
+# Julia
+src/julia/SpaceCommsTwin/Manifest.toml
+src/julia/SpaceCommsTwin/LocalPreferences.toml
+*.jl.cov
+*.jl.mem
+
+# Node / Qwik
+node_modules/
+src/frontend/node_modules/
+src/frontend/dist/
+src/frontend/build/
+src/frontend/.qwik/
+src/frontend/server/
+
+# Robot Framework
+robot_output/
+*.robot.html
+*.robot.xml
+*.robot.log
+
+# Quantum data
+*.qasm.bak
+*.h5
+*.hdf5
+*.csv
+*.pkl
+*.joblib
+
+# Docker
+.docker/
+docker-compose.override.yml
+
+# Test & Coverage
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+coverage/
+coverage_html/
+htmlcov/
+*.trx
+bandit_report.json
+
+# Logs
+logs/
+*.log
+*.log.*
