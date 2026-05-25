@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: space-comms-twin
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: api.space-comms-twin.io
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: space-comms-twin
+            port:
+              number: 80
+  tls:
+  - hosts:
+    - api.space-comms-twin.io
+    secretName: space-comms-twin-tls
