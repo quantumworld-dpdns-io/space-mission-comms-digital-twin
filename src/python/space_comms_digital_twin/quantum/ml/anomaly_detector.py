@@ -60,12 +60,12 @@ class QuantumAnomalyDetector:
         predictions = self.predict(X)
         anomaly_idx = [int(i) for i in range(len(predictions)) if predictions[i] == 1]
         encoded = self._encode_telemetry(X)
-        scores = self.qsvm.decision_function(encoded)
+        scores = np.nan_to_num(self.qsvm.decision_function(encoded), nan=0.0)
         return AnomalyResult(
             n_anomalies=len(anomaly_idx),
             anomaly_scores=list(scores),
             anomaly_indices=anomaly_idx,
-            threshold=float(self.rho_),
+            threshold=float(np.nan_to_num(self.rho_, nan=0.0)),
         )
 
     def compute_threshold(self, X: NDArray, contamination: float = 0.1) -> float:
