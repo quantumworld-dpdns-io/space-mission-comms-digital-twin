@@ -83,7 +83,7 @@ class QSVM:
         sv_labels = np.array(self.support_labels_)
         K_test = self._kernel_matrix(X, sv)
         decision = K_test @ (self.alphas_ * sv_labels) + self.b_
-        return np.sign(decision)
+        return np.where(decision > 0, 1, -1).astype(np.float64)
 
     def decision_function(self, X: NDArray) -> NDArray:
         if not self.support_vectors_:
