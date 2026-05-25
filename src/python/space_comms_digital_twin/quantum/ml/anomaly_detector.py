@@ -53,6 +53,7 @@ class QuantumAnomalyDetector:
     def predict(self, X: NDArray) -> NDArray:
         encoded = self._encode_telemetry(X)
         scores = self.qsvm.decision_function(encoded)
+        scores = np.nan_to_num(scores, nan=0.0)
         return (scores < self.rho_).astype(int)
 
     def detect(self, X: NDArray) -> AnomalyResult:
