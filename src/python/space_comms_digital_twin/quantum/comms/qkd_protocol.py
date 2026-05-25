@@ -108,7 +108,7 @@ class CVQKD:
         bob = alice * math.sqrt(1.0 - self.channel_loss) + np.random.normal(0, 0.1, num_symbols)
         snr = np.var(alice) / (np.var(alice - bob) + 1e-10)
         key_rate = 0.5 * math.log2(1 + snr)
-        bits = [1 if x > 0 else 0 for x in alice[:self.num_bits]]
+        bits = [1 if x > 0 else 0 for x in alice]
         key = "".join(str(b) for b in bits)
         return QKDResult(
             key=key,
