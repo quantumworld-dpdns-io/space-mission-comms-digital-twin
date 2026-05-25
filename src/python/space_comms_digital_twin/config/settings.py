@@ -69,6 +69,4 @@ class Settings(BaseSettings):
     def api_url(self) -> str:
         return f"http://{self.api_host}:{self.api_port}"
 
-    class Config:
-        env_file = ".env"
-        case_sensitive = False
+
