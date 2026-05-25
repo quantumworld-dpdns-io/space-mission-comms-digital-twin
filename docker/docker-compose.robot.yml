@@ -1,0 +1,27 @@
+version: "3.9"
+
+services:
+  zap:
+    image: ghcr.io/zaproxy/zaproxy:stable
+    ports:
+      - "8080:8080"
+    command: zap.sh -daemon -port 8080 -host 0.0.0.0
+
+  api:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    ports:
+      - "8000:8000"
+    env_file:
+      - ../.env.example
+
+  robot:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.robot
+    depends_on:
+      - api
+      - zap
+    volumes:
+      - ../robot_output:/output
