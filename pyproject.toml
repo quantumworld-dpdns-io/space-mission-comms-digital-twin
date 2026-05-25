@@ -87,14 +87,14 @@ version = { attr = "space_comms_digital_twin.__version__.__version__" }
 
 [tool.ruff]
 target-version = "py311"
-line-length = 100
+line-length = 120
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "N", "W", "UP", "B", "SIM", "ARG", "PT", "RUF"]
-ignore = ["D"]
+ignore = ["D", "N818"]
 
 [tool.ruff.lint.per-file-ignores]
-"tests/**" = ["ARG", "N"]
+"tests/**" = ["ARG", "N", "S101"]
 
 [tool.mypy]
 python_version = "3.11"
