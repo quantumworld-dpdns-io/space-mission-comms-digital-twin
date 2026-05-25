@@ -1,0 +1,28 @@
+[package]
+name = "space-comms-quantum-kernel"
+version = "0.1.0"
+edition = "2021"
+description = "Rust quantum kernel for space comms digital twin"
+
+[lib]
+name = "space_comms_quantum_kernel"
+crate-type = ["cdylib", "lib"]
+
+[dependencies]
+pyo3 = { version = "0.21", features = ["extension-module", "multiple-pymethods"] }
+numpy = { version = "0.21", features = ["complex"] }
+ndarray = "0.15"
+rand = "0.8"
+rayon = "1.8"
+num-complex = "0.4"
+
+[dev-dependencies]
+criterion = "0.5"
+
+[[bench]]
+name = "quantum_sim"
+harness = false
+
+[profile.release]
+lto = true
+codegen-units = 1
