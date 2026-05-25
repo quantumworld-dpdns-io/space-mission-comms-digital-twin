@@ -7,7 +7,7 @@ name = "space-comms-digital-twin"
 dynamic = ["version"]
 description = "Space mission comms digital twin – simulation SaaS modeling latency, antenna visibility, and bandwidth bottlenecks before launch"
 readme = "README.md"
-requires-python = ">=3.11,<3.15"
+requires-python = ">=3.11"
 license = { text = "MIT" }
 authors = [
     { name = "quantumworld-dpdns-io", email = "dev@quantumworld.io" },
