@@ -1,0 +1,20 @@
+FROM nvidia/cuda:12.2-runtime-ubuntu22.04 AS gpu
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
+
+WORKDIR /app
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    python3.11 python3-pip python3.11-venv \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY pyproject.toml setup.cfg ./
+COPY src/python/ src/python/
+RUN python3 -m venv /venv && \
+    /venv/bin/pip install --upgrade pip && \
+    /venv/bin/pip install -e ".[gpu,quantum]"
+
+ENV PATH="/venv/bin:$PATH"
+EXPOSE 8000
+CMD ["uvicorn", "space_comms_digital_twin.api.rest.app:app", "--host", "0.0.0.0", "--port", "8000"]
