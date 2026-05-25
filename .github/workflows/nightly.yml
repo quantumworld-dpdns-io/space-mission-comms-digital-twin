@@ -1,0 +1,26 @@
+name: Nightly Build
+
+on:
+  schedule:
+    - cron: "0 0 * * *"
+  workflow_dispatch:
+
+jobs:
+  nightly:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install all deps
+        run: pip install -e ".[all]"
+      - name: Run full test suite
+        run: pytest tests/ -v --timeout=120 --cov=src/python --cov-report=xml
+      - name: Run benchmarks
+        run: pytest tests/benchmarks/ -v --benchmark-json=benchmark_results.json
+      - name: Upload benchmark results
+        uses: actions/upload-artifact@v4
+        with:
+          name: nightly-benchmarks
+          path: benchmark_results.json

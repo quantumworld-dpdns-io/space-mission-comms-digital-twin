@@ -1,0 +1,64 @@
+name: Release
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+  packages: write
+  id-token: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install build tools
+        run: |
+          pip install build twine python-semantic-release
+
+      - name: Python Semantic Release
+        id: semantic-release
+        uses: python-semantic-release/python-semantic-release@v8
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
+  build-and-publish:
+    needs: release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Build package
+        run: |
+          pip install build
+          python -m build
+
+      - name: Publish to PyPI
+        if: needs.release.outputs.released == 'true'
+        uses: pypa/gh-action-pypi-publish@v1.8
+        with:
+          password: ${{ secrets.PYPI_TOKEN }}
+          skip-existing: true
+
+      - name: Build and push Docker image
+        if: needs.release.outputs.released == 'true'
+        run: |
+          docker build -f docker/Dockerfile -t ghcr.io/${{ github.repository }}:${{ needs.release.outputs.version }} .
+          docker tag ghcr.io/${{ github.repository }}:${{ needs.release.outputs.version }} ghcr.io/${{ github.repository }}:latest
+          echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+          docker push ghcr.io/${{ github.repository }}:${{ needs.release.outputs.version }}
+          docker push ghcr.io/${{ github.repository }}:latest
