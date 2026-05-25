@@ -83,3 +83,4 @@ bandit_report.json
 logs/
 *.log
 *.log.*
+scripts/auto_commit.sh
