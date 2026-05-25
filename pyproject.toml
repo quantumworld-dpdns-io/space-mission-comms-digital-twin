@@ -76,10 +76,8 @@ all = [
     "space-comms-digital-twin[dev]",
 ]
 
-[project.entry-points]
-console_scripts = [
-    "sct = space_comms_digital_twin.cli.main:cli",
-]
+[project.scripts]
+sct = "space_comms_digital_twin.cli.main:cli"
 
 [tool.setuptools.packages.find]
 where = ["src/python"]
