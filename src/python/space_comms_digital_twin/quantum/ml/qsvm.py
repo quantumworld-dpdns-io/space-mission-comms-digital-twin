@@ -86,6 +86,8 @@ class QSVM:
         return np.sign(decision)
 
     def decision_function(self, X: NDArray) -> NDArray:
+        if not self.support_vectors_:
+            return np.zeros(len(X))
         sv = np.array(self.support_vectors_)
         sv_labels = np.array(self.support_labels_)
         K_test = self._kernel_matrix(X, sv)
