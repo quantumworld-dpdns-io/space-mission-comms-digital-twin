@@ -21,7 +21,10 @@ async def run_quantum_optimization(problem_type: str = "qaoa", n_qubits: int = 4
 
 
 @router.post("/route")
-async def optimize_route(graph: Dict[str, Dict[str, float]], source: str, target: str):
+async def optimize_route(params: Dict[str, Any]):
+    graph = params.get("graph", {})
+    source = params.get("source", "")
+    target = params.get("target", "")
     job = service.run_route_optimization(graph, source, target)
     return {"job_id": job.id, "status": job.status, "result": job.result}
 
