@@ -1,8 +1,8 @@
 from __future__ import annotations
 
 import math
-from dataclasses import dataclass, field
-from typing import Any, Dict, List, Optional, Tuple
+from dataclasses import dataclass
+from typing import Any
 
 import numpy as np
 
@@ -66,7 +66,7 @@ class EntanglementDistributor:
             distance_km=distance_km,
         )
 
-    def entanglement_purification(self, pairs: List[Tuple[Any, Any]],
+    def entanglement_purification(self, pairs: list[tuple[Any, Any]],
                                   protocol: str = "DEJMPS") -> EntanglementResult:
         if not pairs:
             return EntanglementResult()

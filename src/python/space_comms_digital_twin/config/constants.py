@@ -1,4 +1,3 @@
-from typing import Dict, Tuple
 
 SPEED_OF_LIGHT: float = 299792458.0
 
@@ -9,7 +8,7 @@ EARTH_ROTATION_RATE: float = 7.2921159e-5
 PLANCK_CONSTANT: float = 6.62607015e-34
 BOLTZMANN_CONSTANT: float = 1.380649e-23
 
-FREQUENCY_BANDS: Dict[str, Tuple[float, float]] = {
+FREQUENCY_BANDS: dict[str, tuple[float, float]] = {
     "S": (2.0, 4.0),
     "C": (4.0, 8.0),
     "X": (8.0, 12.0),

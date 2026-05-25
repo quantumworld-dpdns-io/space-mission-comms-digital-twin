@@ -2,14 +2,13 @@ from __future__ import annotations
 
 import math
 from dataclasses import dataclass, field
-from typing import Any, Callable, Dict, List, Optional, Tuple
 
 import numpy as np
 
 
 @dataclass
 class QAOResult:
-    optimal_parameters: List[float] = field(default_factory=list)
+    optimal_parameters: list[float] = field(default_factory=list)
     optimal_value: float = 0.0
     approximation_ratio: float = 0.0
     n_layers: int = 1
@@ -22,7 +21,7 @@ class QAOA:
         self.p = n_layers
         self.optimizer = optimizer
 
-    def build_maxcut_hamiltonian(self, edges: List[Tuple[int, int]], n_qubits: int) -> np.ndarray:
+    def build_maxcut_hamiltonian(self, edges: list[tuple[int, int]], n_qubits: int) -> np.ndarray:
         dim = 2 ** n_qubits
         H = np.zeros((dim, dim))
         for i, j in edges:
@@ -45,7 +44,7 @@ class QAOA:
         return H
 
     def solve(self, problem_hamiltonian: np.ndarray,
-              initial_params: Optional[List[float]] = None,
+              initial_params: list[float] | None = None,
               max_iterations: int = 1000) -> QAOResult:
         n_qubits = int(math.log2(len(problem_hamiltonian)))
         if initial_params is None:
@@ -88,9 +87,9 @@ class QAOA:
                 params_m[i] -= eps
 
                 gamma_p = params_p[:self.p]
-                beta_p = params_p[self.p:]
+                params_p[self.p:]
                 gamma_m = params_m[:self.p]
-                beta_m = params_m[self.p:]
+                params_m[self.p:]
 
                 state_p = np.zeros(len(problem_hamiltonian), dtype=complex)
                 state_p[0] = 1.0

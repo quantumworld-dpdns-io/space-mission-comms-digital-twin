@@ -11,8 +11,8 @@ def test_backend_result_defaults():
 
 def test_qiskit_backend_circuit():
     pytest.importorskip("qiskit")
-    from space_comms_digital_twin.quantum.simulation.qiskit_backend import QiskitBackend
     from qiskit import QuantumCircuit
+    from space_comms_digital_twin.quantum.simulation.qiskit_backend import QiskitBackend
 
     backend = QiskitBackend()
     qc = QuantumCircuit(2, 2)

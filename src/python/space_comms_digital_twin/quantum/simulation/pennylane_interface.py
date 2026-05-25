@@ -1,8 +1,7 @@
 from __future__ import annotations
 
-from typing import Any, Callable, Dict, List, Optional
-
-import numpy as np
+from collections.abc import Callable
+from typing import Any
 
 from space_comms_digital_twin.quantum.simulation.backend_interface import (
     BackendResult,
@@ -20,7 +19,7 @@ class PennyLaneInterface(QuantumBackend):
     def max_qubits(self) -> int:
         return 20
 
-    def gate_set(self) -> List[str]:
+    def gate_set(self) -> list[str]:
         return ["H", "X", "Y", "Z", "S", "T", "CNOT", "CZ", "SWAP",
                 "RX", "RY", "RZ", "CRX", "CRY", "CRZ", "QubitUnitary"]
 
@@ -86,5 +85,5 @@ class PennyLaneInterface(QuantumBackend):
         except ImportError:
             raise ImportError("PennyLane not installed")
 
-    def estimate_resources(self, circuit: Any) -> Dict[str, Any]:
+    def estimate_resources(self, circuit: Any) -> dict[str, Any]:
         return {"qubits": circuit.get("qubits", 0), "gates": len(circuit.get("operations", [])), "depth": 0}

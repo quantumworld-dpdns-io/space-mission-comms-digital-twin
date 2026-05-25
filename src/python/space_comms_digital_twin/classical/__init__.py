@@ -1,5 +1,3 @@
-from . import models
-from . import simulation
-from . import optimization
+from . import models, optimization, simulation
 
-__all__ = ["models", "simulation", "optimization"]
+__all__ = ["models", "optimization", "simulation"]

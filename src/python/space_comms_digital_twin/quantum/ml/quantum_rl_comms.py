@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import math
 from dataclasses import dataclass, field
-from typing import Any, Dict, List, Optional, Tuple
 
 import numpy as np
 from numpy.typing import NDArray
@@ -10,11 +9,11 @@ from numpy.typing import NDArray
 
 @dataclass
 class RLResult:
-    episode_rewards: List[float] = field(default_factory=list)
+    episode_rewards: list[float] = field(default_factory=list)
     avg_reward: float = 0.0
     policy_converged: bool = False
     n_episodes: int = 0
-    best_action_sequence: List[int] = field(default_factory=list)
+    best_action_sequence: list[int] = field(default_factory=list)
 
 
 class QuantumRLComms:
@@ -58,12 +57,12 @@ class QuantumRLComms:
         episode_rewards = []
         best_avg = -float('inf')
 
-        for episode in range(n_episodes):
+        for _episode in range(n_episodes):
             state = env_fn()
             total_reward = 0.0
             action_sequence = []
 
-            for step in range(max_steps):
+            for _step in range(max_steps):
                 action = self.choose_action(state)
                 action_sequence.append(action)
                 reward = -abs(state[0]) if len(state) > 0 else 0.0

@@ -1,9 +1,8 @@
 from __future__ import annotations
 
 import math
-from dataclasses import dataclass, field
-from datetime import datetime, timedelta, timezone
-from typing import Optional
+from dataclasses import dataclass
+from datetime import UTC, datetime
 
 import numpy as np
 from sgp4.api import Satrec, jday
@@ -15,7 +14,7 @@ class Satellite:
     name: str = ""
     tle_line1: str = ""
     tle_line2: str = ""
-    epoch: Optional[datetime] = None
+    epoch: datetime | None = None
     inclination: float = 0.0
     raan: float = 0.0
     eccentricity: float = 0.0
@@ -23,10 +22,10 @@ class Satellite:
     mean_anomaly: float = 0.0
     mean_motion: float = 0.0
     bstar: float = 0.0
-    launch_date: Optional[datetime] = None
+    launch_date: datetime | None = None
     satellite_type: str = "LEO"
     owner: str = ""
-    _sgp4_sat: Optional[Satrec] = None
+    _sgp4_sat: Satrec | None = None
 
     def __post_init__(self) -> None:
         if self.tle_line1 and self.tle_line2:
@@ -58,15 +57,15 @@ class Satellite:
             raise RuntimeError(f"SGP4 propagation error: {error_code}")
         return np.array(pos_eci) * 1000.0, np.array(vel_eci) * 1000.0
 
-    def get_position_eci(self, epoch: Optional[datetime] = None) -> np.ndarray:
+    def get_position_eci(self, epoch: datetime | None = None) -> np.ndarray:
         if epoch is None:
-            epoch = datetime.now(timezone.utc)
+            epoch = datetime.now(UTC)
         pos, _ = self.propagate_to(epoch)
         return pos
 
-    def get_velocity_eci(self, epoch: Optional[datetime] = None) -> np.ndarray:
+    def get_velocity_eci(self, epoch: datetime | None = None) -> np.ndarray:
         if epoch is None:
-            epoch = datetime.now(timezone.utc)
+            epoch = datetime.now(UTC)
         _, vel = self.propagate_to(epoch)
         return vel
 
@@ -78,9 +77,9 @@ class Satellite:
         n = self.mean_motion * 2.0 * math.pi / 86400.0
         return (EARTH_MU / (n ** 2)) ** (1.0 / 3.0)
 
-    def is_in_eclipse(self, epoch: Optional[datetime] = None) -> bool:
+    def is_in_eclipse(self, epoch: datetime | None = None) -> bool:
         if epoch is None:
-            epoch = datetime.now(timezone.utc)
+            epoch = datetime.now(UTC)
         pos = self.get_position_eci(epoch)
         sun_vec = self._sun_vector(epoch)
         norm_pos = np.linalg.norm(pos)
@@ -94,9 +93,8 @@ class Satellite:
 
     @staticmethod
     def _sun_vector(epoch: datetime) -> np.ndarray:
+        from astropy.coordinates import get_sun
         from astropy.time import Time
-        from astropy.coordinates import get_sun, GCRS
-        from astropy.coordinates import SkyCoord
         t = Time(epoch)
         sun = get_sun(t)
         cart = sun.represent_as('cartesian')

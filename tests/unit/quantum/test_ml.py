@@ -1,8 +1,7 @@
-import pytest
 import numpy as np
-from space_comms_digital_twin.quantum.ml.qsvm import QSVM
-from space_comms_digital_twin.quantum.ml.qnn import QNN
 from space_comms_digital_twin.quantum.ml.anomaly_detector import QuantumAnomalyDetector
+from space_comms_digital_twin.quantum.ml.qnn import QNN
+from space_comms_digital_twin.quantum.ml.qsvm import QSVM
 
 
 def test_qsvm_fit():

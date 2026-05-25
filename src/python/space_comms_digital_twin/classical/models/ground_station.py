@@ -2,9 +2,9 @@ from __future__ import annotations
 
 import math
 from dataclasses import dataclass, field
-from typing import List, Optional
 
 import numpy as np
+
 from space_comms_digital_twin.config import EARTH_RADIUS
 
 
@@ -17,7 +17,7 @@ class GroundStation:
     altitude: float = 0.0
     elevation_mask: float = 5.0
     site_type: str = "fixed"
-    antennas: List[str] = field(default_factory=list)
+    antennas: list[str] = field(default_factory=list)
     operator: str = ""
     timezone: str = "UTC"
 
@@ -83,10 +83,10 @@ class GroundStation:
         t = Time.now()
         return t.sidereal_time('mean', 'greenwich').rad
 
-    def time_to_aos(self, sat_eci_func: object) -> Optional[float]:
+    def time_to_aos(self, sat_eci_func: object) -> float | None:
         return None
 
-    def time_to_los(self, sat_eci_func: object) -> Optional[float]:
+    def time_to_los(self, sat_eci_func: object) -> float | None:
         return None
 
     def to_dict(self) -> dict:

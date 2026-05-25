@@ -1,22 +1,22 @@
-from .backend_interface import QuantumBackend, BackendResult
-from .cudaq_backend import CUDAQBackend
-from .qiskit_backend import QiskitBackend
-from .cirq_backend import CirqBackend
-from .qutip_backend import QuTiPBackend
-from .pennylane_interface import PennyLaneInterface
+from .backend_interface import BackendResult, QuantumBackend
 from .braket_interface import BraketBackend
-from .strawberry_fields import StrawberryFieldsBackend
+from .cirq_backend import CirqBackend
+from .cudaq_backend import CUDAQBackend
 from .hybrid_simulator import HybridSimulator
+from .pennylane_interface import PennyLaneInterface
+from .qiskit_backend import QiskitBackend
+from .qutip_backend import QuTiPBackend
+from .strawberry_fields import StrawberryFieldsBackend
 
 __all__ = [
-    "QuantumBackend",
     "BackendResult",
-    "CUDAQBackend",
-    "QiskitBackend",
-    "CirqBackend",
-    "QuTiPBackend",
-    "PennyLaneInterface",
     "BraketBackend",
-    "StrawberryFieldsBackend",
+    "CUDAQBackend",
+    "CirqBackend",
     "HybridSimulator",
+    "PennyLaneInterface",
+    "QiskitBackend",
+    "QuTiPBackend",
+    "QuantumBackend",
+    "StrawberryFieldsBackend",
 ]

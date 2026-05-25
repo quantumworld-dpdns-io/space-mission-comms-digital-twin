@@ -2,16 +2,15 @@ from __future__ import annotations
 
 import math
 from dataclasses import dataclass, field
-from typing import List, Optional, Tuple
 
 import numpy as np
 
 
 @dataclass
 class AnnealingResult:
-    final_state: List[int] = field(default_factory=list)
+    final_state: list[int] = field(default_factory=list)
     final_energy: float = 0.0
-    energy_history: List[float] = field(default_factory=list)
+    energy_history: list[float] = field(default_factory=list)
     n_steps: int = 0
     schedule: str = "linear"
 
@@ -69,7 +68,7 @@ class QuantumAnnealing:
                 energy -= J[i, j] * spins[i] * spins[j]
         return energy
 
-    def build_qubo(self, Q: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
+    def build_qubo(self, Q: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
         n = Q.shape[0]
         h = np.zeros(n)
         J = np.zeros((n, n))

@@ -1,25 +1,25 @@
 from __future__ import annotations
 
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 import numpy as np
 
 
 class TelemetryService:
     def __init__(self):
-        self.telemetry_buffer: Dict[str, List[Dict[str, Any]]] = {}
+        self.telemetry_buffer: dict[str, list[dict[str, Any]]] = {}
 
-    def ingest(self, source: str, data: Dict[str, Any]) -> bool:
+    def ingest(self, source: str, data: dict[str, Any]) -> bool:
         if source not in self.telemetry_buffer:
             self.telemetry_buffer[source] = []
         self.telemetry_buffer[source].append(data)
         return True
 
-    def get_latest(self, source: str, n: int = 10) -> List[Dict[str, Any]]:
+    def get_latest(self, source: str, n: int = 10) -> list[dict[str, Any]]:
         buf = self.telemetry_buffer.get(source, [])
         return buf[-n:]
 
-    def compute_statistics(self, source: str, field: str) -> Dict[str, float]:
+    def compute_statistics(self, source: str, field: str) -> dict[str, float]:
         buf = self.telemetry_buffer.get(source, [])
         values = [d.get(field, 0.0) for d in buf if field in d]
         if not values:
@@ -33,7 +33,7 @@ class TelemetryService:
             "last": float(arr[-1]),
         }
 
-    def check_anomaly(self, source: str, field: str, threshold: float = 3.0) -> List[int]:
+    def check_anomaly(self, source: str, field: str, threshold: float = 3.0) -> list[int]:
         buf = self.telemetry_buffer.get(source, [])
         values = [d.get(field, 0.0) for d in buf if field in d]
         if len(values) < 10:

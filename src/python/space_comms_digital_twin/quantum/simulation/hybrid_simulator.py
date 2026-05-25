@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import time
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from space_comms_digital_twin.quantum.simulation.backend_interface import (
     BackendResult,
@@ -14,7 +14,7 @@ logger = get_logger(__name__)
 
 class HybridSimulator:
     def __init__(self):
-        self.backends: Dict[str, QuantumBackend] = {}
+        self.backends: dict[str, QuantumBackend] = {}
         self._register_default_backends()
 
     def _register_default_backends(self) -> None:
@@ -41,17 +41,17 @@ class HybridSimulator:
     def register_backend(self, backend: QuantumBackend) -> None:
         self.backends[backend.name()] = backend
 
-    def get_backend(self, name: str) -> Optional[QuantumBackend]:
+    def get_backend(self, name: str) -> QuantumBackend | None:
         return self.backends.get(name)
 
-    def list_backends(self) -> List[Dict[str, Any]]:
+    def list_backends(self) -> list[dict[str, Any]]:
         return [
             {"name": b.name(), "max_qubits": b.max_qubits(), "gate_set": b.gate_set()}
             for b in self.backends.values()
         ]
 
     def run_on_all(self, circuit: Any, shots: int = 1024,
-                   filter_backends: Optional[List[str]] = None) -> Dict[str, BackendResult]:
+                   filter_backends: list[str] | None = None) -> dict[str, BackendResult]:
         results = {}
         for name, backend in self.backends.items():
             if filter_backends and name not in filter_backends:
@@ -73,7 +73,7 @@ class HybridSimulator:
         best_name = min(results.keys())
         return results[best_name]
 
-    def compare_backends(self, circuit: Any, shots: int = 1024) -> Dict[str, Any]:
+    def compare_backends(self, circuit: Any, shots: int = 1024) -> dict[str, Any]:
         results = self.run_on_all(circuit, shots=shots)
         comparison = {}
         for name, result in results.items():
@@ -84,7 +84,7 @@ class HybridSimulator:
             }
         return comparison
 
-    def estimate_resources(self, circuit: Any) -> Dict[str, Any]:
+    def estimate_resources(self, circuit: Any) -> dict[str, Any]:
         total = {"qubits": 0, "gates": 0}
         for backend in self.backends.values():
             est = backend.estimate_resources(circuit)

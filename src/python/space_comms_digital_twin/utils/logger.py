@@ -4,7 +4,6 @@ import json
 import logging
 import sys
 from pathlib import Path
-from typing import Optional
 
 
 class JSONFormatter(logging.Formatter):
@@ -31,7 +30,7 @@ class LoggerFactory:
         name: str,
         level: str = "INFO",
         log_format: str = "json",
-        log_file: Optional[Path] = None,
+        log_file: Path | None = None,
     ) -> logging.Logger:
         if name in cls._instances:
             return cls._instances[name]

@@ -2,8 +2,8 @@ from __future__ import annotations
 
 import uuid
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
-from typing import Any, Dict, List, Optional
+from datetime import UTC, datetime
+from typing import Any
 
 from space_comms_digital_twin.classical.optimization.antenna_scheduler import AntennaScheduler
 from space_comms_digital_twin.classical.optimization.route_optimizer import RouteOptimizer
@@ -16,17 +16,17 @@ class OptimizationJob:
     id: str = ""
     status: str = "pending"
     algorithm: str = ""
-    created_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
-    result: Optional[Dict[str, Any]] = None
-    error: Optional[str] = None
+    created_at: datetime = field(default_factory=lambda: datetime.now(UTC))
+    result: dict[str, Any] | None = None
+    error: str | None = None
 
 
 class OptimizationService:
     def __init__(self):
-        self.jobs: Dict[str, OptimizationJob] = {}
+        self.jobs: dict[str, OptimizationJob] = {}
 
-    def run_antenna_scheduling(self, tasks: List[Dict],
-                                 antennas: List[Dict]) -> OptimizationJob:
+    def run_antenna_scheduling(self, tasks: list[dict],
+                                 antennas: list[dict]) -> OptimizationJob:
         job_id = str(uuid.uuid4())
         job = OptimizationJob(id=job_id, status="running", algorithm="classical_antenna")
         self.jobs[job_id] = job
@@ -85,7 +85,7 @@ class OptimizationService:
 
         return job
 
-    def run_route_optimization(self, graph: Dict[str, Dict[str, float]],
+    def run_route_optimization(self, graph: dict[str, dict[str, float]],
                                  source: str, target: str) -> OptimizationJob:
         job_id = str(uuid.uuid4())
         job = OptimizationJob(id=job_id, status="running", algorithm="classical_route")
@@ -106,10 +106,10 @@ class OptimizationService:
 
         return job
 
-    def get_job(self, job_id: str) -> Optional[OptimizationJob]:
+    def get_job(self, job_id: str) -> OptimizationJob | None:
         return self.jobs.get(job_id)
 
-    def list_jobs(self) -> List[Dict[str, Any]]:
+    def list_jobs(self) -> list[dict[str, Any]]:
         return [
             {"id": j.id, "status": j.status, "algorithm": j.algorithm}
             for j in self.jobs.values()

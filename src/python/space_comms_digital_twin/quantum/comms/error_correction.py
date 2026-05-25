@@ -3,9 +3,7 @@ from __future__ import annotations
 import math
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
-from typing import Any, Dict, List, Optional, Tuple
-
-import numpy as np
+from typing import Any
 
 
 @dataclass
@@ -14,7 +12,7 @@ class ErrorCorrectionResult:
     physical_error_rate: float = 0.0
     code_distance: int = 3
     num_physical_qubits: int = 0
-    syndrome: List[int] = field(default_factory=list)
+    syndrome: list[int] = field(default_factory=list)
     correction_applied: bool = False
     success: bool = False
 
@@ -27,10 +25,10 @@ class QuantumErrorCorrectionCode(ABC):
     def encode(self, logical_state: Any) -> Any: ...
 
     @abstractmethod
-    def syndrome_measurement(self, encoded_state: Any) -> List[int]: ...
+    def syndrome_measurement(self, encoded_state: Any) -> list[int]: ...
 
     @abstractmethod
-    def correct(self, encoded_state: Any, syndrome: List[int]) -> Any: ...
+    def correct(self, encoded_state: Any, syndrome: list[int]) -> Any: ...
 
     @abstractmethod
     def logical_error_rate(self, physical_error_rate: float) -> float: ...
@@ -46,10 +44,10 @@ class RepetitionCode(QuantumErrorCorrectionCode):
     def encode(self, logical_state: Any) -> Any:
         return logical_state
 
-    def syndrome_measurement(self, encoded_state: Any) -> List[int]:
+    def syndrome_measurement(self, encoded_state: Any) -> list[int]:
         return [0] * (self.d - 1)
 
-    def correct(self, encoded_state: Any, syndrome: List[int]) -> Any:
+    def correct(self, encoded_state: Any, syndrome: list[int]) -> Any:
         return encoded_state
 
     def logical_error_rate(self, physical_error_rate: float) -> float:
@@ -71,10 +69,10 @@ class ShorCode(QuantumErrorCorrectionCode):
     def encode(self, logical_state: Any) -> Any:
         return logical_state
 
-    def syndrome_measurement(self, encoded_state: Any) -> List[int]:
+    def syndrome_measurement(self, encoded_state: Any) -> list[int]:
         return [0] * 8
 
-    def correct(self, encoded_state: Any, syndrome: List[int]) -> Any:
+    def correct(self, encoded_state: Any, syndrome: list[int]) -> Any:
         return encoded_state
 
     def logical_error_rate(self, physical_error_rate: float) -> float:
@@ -92,10 +90,10 @@ class SteaneCode(QuantumErrorCorrectionCode):
     def encode(self, logical_state: Any) -> Any:
         return logical_state
 
-    def syndrome_measurement(self, encoded_state: Any) -> List[int]:
+    def syndrome_measurement(self, encoded_state: Any) -> list[int]:
         return [0] * 6
 
-    def correct(self, encoded_state: Any, syndrome: List[int]) -> Any:
+    def correct(self, encoded_state: Any, syndrome: list[int]) -> Any:
         return encoded_state
 
     def logical_error_rate(self, physical_error_rate: float) -> float:
@@ -116,10 +114,10 @@ class SurfaceCode(QuantumErrorCorrectionCode):
     def encode(self, logical_state: Any) -> Any:
         return logical_state
 
-    def syndrome_measurement(self, encoded_state: Any) -> List[int]:
+    def syndrome_measurement(self, encoded_state: Any) -> list[int]:
         return [0] * (self.d ** 2 - 1)
 
-    def correct(self, encoded_state: Any, syndrome: List[int]) -> Any:
+    def correct(self, encoded_state: Any, syndrome: list[int]) -> Any:
         return encoded_state
 
     def logical_error_rate(self, physical_error_rate: float) -> float:

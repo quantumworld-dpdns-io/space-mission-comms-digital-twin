@@ -2,17 +2,11 @@ from __future__ import annotations
 
 import uuid
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
-from typing import Any, Dict, List, Optional
+from datetime import UTC, datetime
+from typing import Any
 
-from space_comms_digital_twin.quantum.comms.qkd_protocol import BB84, DecoyStateQKD, CVQKD
+from space_comms_digital_twin.quantum.comms.qkd_protocol import BB84, CVQKD, DecoyStateQKD
 from space_comms_digital_twin.quantum.comms.teleportation import QuantumTeleportation
-from space_comms_digital_twin.quantum.comms.error_correction import (
-    RepetitionCode,
-    ShorCode,
-    SteaneCode,
-    SurfaceCode,
-)
 from space_comms_digital_twin.quantum.simulation.hybrid_simulator import HybridSimulator
 
 
@@ -21,17 +15,17 @@ class QuantumJob:
     id: str = ""
     status: str = "pending"
     backend: str = ""
-    created_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
-    result: Optional[Dict[str, Any]] = None
-    error: Optional[str] = None
+    created_at: datetime = field(default_factory=lambda: datetime.now(UTC))
+    result: dict[str, Any] | None = None
+    error: str | None = None
 
 
 class QuantumService:
     def __init__(self):
-        self.jobs: Dict[str, QuantumJob] = {}
+        self.jobs: dict[str, QuantumJob] = {}
         self.hybrid = HybridSimulator()
 
-    def run_circuit(self, circuit: Dict[str, Any],
+    def run_circuit(self, circuit: dict[str, Any],
                     backend: str = "qiskit", shots: int = 1024) -> QuantumJob:
         job_id = str(uuid.uuid4())
         job = QuantumJob(id=job_id, status="running", backend=backend)
@@ -83,7 +77,7 @@ class QuantumService:
 
         return job
 
-    def run_teleportation(self, noise_params: Optional[Dict[str, float]] = None) -> QuantumJob:
+    def run_teleportation(self, noise_params: dict[str, float] | None = None) -> QuantumJob:
         job_id = str(uuid.uuid4())
         job = QuantumJob(id=job_id, status="running")
         self.jobs[job_id] = job
@@ -102,8 +96,8 @@ class QuantumService:
 
         return job
 
-    def list_backends(self) -> List[Dict[str, Any]]:
+    def list_backends(self) -> list[dict[str, Any]]:
         return self.hybrid.list_backends()
 
-    def get_job(self, job_id: str) -> Optional[QuantumJob]:
+    def get_job(self, job_id: str) -> QuantumJob | None:
         return self.jobs.get(job_id)

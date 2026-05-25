@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import math
 from dataclasses import dataclass, field
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 import numpy as np
 from numpy.typing import NDArray
@@ -11,7 +11,7 @@ from numpy.typing import NDArray
 @dataclass
 class NLPResult:
     accuracy: float = 0.0
-    loss_history: List[float] = field(default_factory=list)
+    loss_history: list[float] = field(default_factory=list)
     n_sequences: int = 0
     embedding_dim: int = 0
 
@@ -40,11 +40,11 @@ class QuantumNLPTelemetry:
             state = self._apply_1q(state, n_qubits, i, np.array([[c, -s], [s, c]]))
         return state
 
-    def encode_telemetry_sequence(self, sequence: List[float]) -> NDArray:
+    def encode_telemetry_sequence(self, sequence: list[float]) -> NDArray:
         scalars = np.array([math.atanh(max(-0.99, min(0.99, v))) for v in sequence])
         return self._amplitude_embedding(scalars)
 
-    def detect_pattern(self, sequence: NDArray) -> Dict[str, Any]:
+    def detect_pattern(self, sequence: NDArray) -> dict[str, Any]:
         state = self.encode_telemetry_sequence(sequence)
         probs = np.abs(state) ** 2
         entropy = -np.sum(probs * np.log(probs + 1e-10))
@@ -55,8 +55,8 @@ class QuantumNLPTelemetry:
             "sequence_length": len(sequence),
         }
 
-    def classify_sequence(self, sequence: NDArray, labels: Optional[NDArray] = None) -> NLPResult:
-        features = self.encode_telemetry_sequence(sequence)
+    def classify_sequence(self, sequence: NDArray, labels: NDArray | None = None) -> NLPResult:
+        self.encode_telemetry_sequence(sequence)
         return NLPResult(
             accuracy=0.85,
             n_sequences=1,

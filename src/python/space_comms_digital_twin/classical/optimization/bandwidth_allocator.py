@@ -1,23 +1,19 @@
 from __future__ import annotations
 
-from typing import Dict, List, Optional
-
-import numpy as np
-
 
 class BandwidthAllocator:
     def __init__(self, total_capacity_bps: float):
         self.total_capacity = total_capacity_bps
 
-    def proportional_fair_allocation(self, demands: Dict[str, float]) -> Dict[str, float]:
+    def proportional_fair_allocation(self, demands: dict[str, float]) -> dict[str, float]:
         total_demand = sum(demands.values())
         if total_demand <= self.total_capacity:
             return dict(demands)
         scale = self.total_capacity / total_demand
         return {k: v * scale for k, v in demands.items()}
 
-    def max_min_fair_allocation(self, demands: Dict[str, float]) -> Dict[str, float]:
-        n = len(demands)
+    def max_min_fair_allocation(self, demands: dict[str, float]) -> dict[str, float]:
+        len(demands)
         remaining = self.total_capacity
         active = set(demands.keys())
         allocations = {k: 0.0 for k in demands}
@@ -37,7 +33,7 @@ class BandwidthAllocator:
             active -= saturated
         return allocations
 
-    def water_filling_allocation(self, demands: Dict[str, float], weights: Optional[Dict[str, float]] = None) -> Dict[str, float]:
+    def water_filling_allocation(self, demands: dict[str, float], weights: dict[str, float] | None = None) -> dict[str, float]:
         if weights is None:
             weights = {k: 1.0 for k in demands}
         total_weight = sum(weights.values())
@@ -56,10 +52,10 @@ class BandwidthAllocator:
                     allocations[user] += extra
         return allocations
 
-    def demand_based_allocation(self, demands: Dict[str, float], sla_weights: Optional[Dict[str, float]] = None) -> Dict[str, float]:
+    def demand_based_allocation(self, demands: dict[str, float], sla_weights: dict[str, float] | None = None) -> dict[str, float]:
         return self.proportional_fair_allocation(demands)
 
-    def compute_fairness(self, allocations: List[float]) -> float:
+    def compute_fairness(self, allocations: list[float]) -> float:
         n = len(allocations)
         if n == 0:
             return 0.0
@@ -69,5 +65,5 @@ class BandwidthAllocator:
             return 0.0
         return (total ** 2) / (n * sum_sq)
 
-    def compute_efficiency(self, allocations: List[float]) -> float:
+    def compute_efficiency(self, allocations: list[float]) -> float:
         return sum(allocations) / self.total_capacity if self.total_capacity > 0 else 0.0

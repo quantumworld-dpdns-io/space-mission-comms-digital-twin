@@ -2,10 +2,8 @@ from __future__ import annotations
 
 import math
 from dataclasses import dataclass
-from typing import Optional
 
-import numpy as np
-from space_comms_digital_twin.config import SPEED_OF_LIGHT, BOLTZMANN_CONSTANT
+from space_comms_digital_twin.config import BOLTZMANN_CONSTANT, SPEED_OF_LIGHT
 
 
 def friis_transmission_loss(distance: float, freq_hz: float) -> float:

@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import math
 from dataclasses import dataclass, field
-from typing import Any, Dict, List, Optional, Tuple
 
 import numpy as np
 from numpy.typing import NDArray
@@ -10,10 +9,10 @@ from numpy.typing import NDArray
 
 @dataclass
 class GenerativeResult:
-    samples: List[List[int]] = field(default_factory=list)
+    samples: list[list[int]] = field(default_factory=list)
     fidelity: float = 0.0
     n_parameters: int = 0
-    training_loss: List[float] = field(default_factory=list)
+    training_loss: list[float] = field(default_factory=list)
 
 
 class QuantumGenerativeModel:
@@ -62,7 +61,7 @@ class QuantumGenerativeModel:
 
     def train(self, target_distribution: NDArray, epochs: int = 100) -> GenerativeResult:
         losses = []
-        for epoch in range(epochs):
+        for _epoch in range(epochs):
             state = self._born_machine(self.params)
             current_probs = np.abs(state) ** 2
             current_probs = current_probs / (current_probs.sum() + 1e-10)

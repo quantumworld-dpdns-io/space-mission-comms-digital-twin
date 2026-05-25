@@ -1,14 +1,14 @@
 from __future__ import annotations
 
 import heapq
-from typing import Any, Callable, Dict, List, Optional, Tuple
+from collections.abc import Callable
 
 
 class RouteOptimizer:
-    def __init__(self, graph: Dict[str, Dict[str, float]]):
+    def __init__(self, graph: dict[str, dict[str, float]]):
         self.graph = graph
 
-    def dijkstra_shortest_path(self, source: str, target: str) -> Tuple[Optional[List[str]], float]:
+    def dijkstra_shortest_path(self, source: str, target: str) -> tuple[list[str] | None, float]:
         distances = {node: float('inf') for node in self.graph}
         distances[source] = 0.0
         previous = {node: None for node in self.graph}
@@ -30,9 +30,9 @@ class RouteOptimizer:
 
         return None, float('inf')
 
-    def a_star_search(self, source: str, target: str, heuristic: Callable[[str, str], float]) -> Tuple[Optional[List[str]], float]:
+    def a_star_search(self, source: str, target: str, heuristic: Callable[[str, str], float]) -> tuple[list[str] | None, float]:
         open_set = {source}
-        came_from: Dict[str, Optional[str]] = {}
+        came_from: dict[str, str | None] = {}
         g_score = {node: float('inf') for node in self.graph}
         g_score[source] = 0.0
         f_score = {node: float('inf') for node in self.graph}
@@ -56,8 +56,8 @@ class RouteOptimizer:
 
         return None, float('inf')
 
-    def delay_tolerant_routing(self, source: str, target: str, contacts: List[Dict], deadline: float) -> Optional[List[str]]:
-        time_graph: Dict[str, List[Tuple[str, float, float]]] = {}
+    def delay_tolerant_routing(self, source: str, target: str, contacts: list[dict], deadline: float) -> list[str] | None:
+        time_graph: dict[str, list[tuple[str, float, float]]] = {}
         for contact in contacts:
             src = contact["source"]
             dst = contact["dest"]
@@ -93,9 +93,9 @@ class RouteOptimizer:
             return path
         return None
 
-    def multi_path_routing(self, source: str, target: str, k: int = 3) -> List[Tuple[List[str], float]]:
-        paths: List[Tuple[List[str], float]] = []
-        banned_edges: List[Tuple[str, str]] = []
+    def multi_path_routing(self, source: str, target: str, k: int = 3) -> list[tuple[list[str], float]]:
+        paths: list[tuple[list[str], float]] = []
+        banned_edges: list[tuple[str, str]] = []
 
         for _ in range(k):
             temp_graph = {n: dict(edges) for n, edges in self.graph.items()}
@@ -114,8 +114,8 @@ class RouteOptimizer:
 
         return paths
 
-    def load_balancing(self, traffic_matrix: Dict[str, Dict[str, float]]) -> Dict[str, float]:
-        link_loads: Dict[str, float] = {}
+    def load_balancing(self, traffic_matrix: dict[str, dict[str, float]]) -> dict[str, float]:
+        link_loads: dict[str, float] = {}
         for src in traffic_matrix:
             for dst in traffic_matrix[src]:
                 path, _ = self.dijkstra_shortest_path(src, dst)
@@ -125,9 +125,9 @@ class RouteOptimizer:
                         link_loads[link] = link_loads.get(link, 0.0) + traffic_matrix[src][dst]
         return link_loads
 
-    def _reconstruct_path(self, previous: Dict[str, Optional[str]], target: str) -> List[str]:
+    def _reconstruct_path(self, previous: dict[str, str | None], target: str) -> list[str]:
         path = []
-        current: Optional[str] = target
+        current: str | None = target
         while current is not None:
             path.append(current)
             current = previous[current]

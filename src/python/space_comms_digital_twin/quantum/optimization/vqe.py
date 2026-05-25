@@ -2,17 +2,16 @@ from __future__ import annotations
 
 import math
 from dataclasses import dataclass, field
-from typing import Any, Callable, Dict, List, Optional, Tuple
 
 import numpy as np
 
 
 @dataclass
 class VQEResult:
-    optimal_parameters: List[float] = field(default_factory=list)
+    optimal_parameters: list[float] = field(default_factory=list)
     optimal_energy: float = 0.0
     n_iterations: int = 0
-    convergence: List[float] = field(default_factory=list)
+    convergence: list[float] = field(default_factory=list)
     ansatz_depth: int = 0
     n_qubits: int = 0
 
@@ -23,7 +22,7 @@ class VQE:
         self.n_layers = n_layers
         self.optimizer = optimizer
 
-    def build_hamiltonian(self, pauli_terms: List[Tuple[str, float]]) -> np.ndarray:
+    def build_hamiltonian(self, pauli_terms: list[tuple[str, float]]) -> np.ndarray:
         dim = 2 ** self.n_qubits
         H = np.zeros((dim, dim), dtype=complex)
 
@@ -71,7 +70,7 @@ class VQE:
         return state
 
     def solve(self, hamiltonian: np.ndarray,
-              initial_params: Optional[np.ndarray] = None,
+              initial_params: np.ndarray | None = None,
               max_iterations: int = 500) -> VQEResult:
         n_params = self.n_qubits + self.n_layers * self.n_qubits
         if initial_params is None:
@@ -107,9 +106,8 @@ class VQE:
                 grad = (energy_plus - energy_minus) / (2.0 * epsilon)
                 params[i] -= 0.01 * grad
 
-            if len(convergence) > 20:
-                if abs(convergence[-1] - convergence[-20]) < 1e-8:
-                    break
+            if len(convergence) > 20 and abs(convergence[-1] - convergence[-20]) < 1e-8:
+                break
 
         return VQEResult(
             optimal_parameters=list(best_params),
@@ -145,11 +143,8 @@ class VQE:
             row = (b1 << 1) | b2
             for col in range(4):
                 t1 = (col >> 1) & 1
-                t2 = col & 1
-                if t1 != b1:
-                    src = k ^ (1 << q1)
-                else:
-                    src = k ^ (1 << q2)
+                col & 1
+                src = k ^ 1 << q1 if t1 != b1 else k ^ 1 << q2
                 j = src
                 new_state[k] += gate[row, col] * state[j]
         return new_state

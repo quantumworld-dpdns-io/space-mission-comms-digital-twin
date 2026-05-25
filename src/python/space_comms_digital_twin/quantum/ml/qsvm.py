@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Any, Dict, List, Optional, Tuple
 
 import numpy as np
 from numpy.typing import NDArray
@@ -13,7 +12,7 @@ class QSVMResult:
     precision: float = 0.0
     recall: float = 0.0
     f1_score: float = 0.0
-    support_vectors: List[int] = field(default_factory=list)
+    support_vectors: list[int] = field(default_factory=list)
     n_features: int = 0
     n_support_vectors: int = 0
     kernel_type: str = "quantum"
@@ -23,13 +22,12 @@ class QSVM:
     def __init__(self, kernel_type: str = "quantum", n_qubits: int = 4):
         self.kernel_type = kernel_type
         self.n_qubits = n_qubits
-        self.support_vectors_: List = []
-        self.support_labels_: List = []
+        self.support_vectors_: list = []
+        self.support_labels_: list = []
         self.alphas_: NDArray = np.array([])
         self.b_: float = 0.0
 
     def _quantum_kernel(self, x1: NDArray, x2: NDArray) -> float:
-        from scipy.spatial.distance import pdist, squareform
         diff = x1 - x2
         kernel_val = np.exp(-0.5 * np.dot(diff, diff))
         return float(kernel_val)

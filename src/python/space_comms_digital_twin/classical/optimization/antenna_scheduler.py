@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any
 
 
 @dataclass
@@ -13,24 +13,24 @@ class ScheduleTask:
     end_time: float
     priority: int = 0
     bandwidth_required: float = 0.0
-    assigned_antenna: Optional[str] = None
+    assigned_antenna: str | None = None
 
 
 @dataclass
 class ScheduleResult:
-    tasks: List[ScheduleTask] = field(default_factory=list)
-    unscheduled: List[ScheduleTask] = field(default_factory=list)
-    metrics: Dict[str, float] = field(default_factory=dict)
+    tasks: list[ScheduleTask] = field(default_factory=list)
+    unscheduled: list[ScheduleTask] = field(default_factory=list)
+    metrics: dict[str, float] = field(default_factory=dict)
 
 
 class AntennaScheduler:
-    def __init__(self, antennas: List[Dict[str, Any]]):
+    def __init__(self, antennas: list[dict[str, Any]]):
         self.antennas = antennas
 
-    def greedy_schedule(self, tasks: List[ScheduleTask]) -> ScheduleResult:
+    def greedy_schedule(self, tasks: list[ScheduleTask]) -> ScheduleResult:
         sorted_tasks = sorted(tasks, key=lambda t: t.priority, reverse=True)
         result = ScheduleResult()
-        antenna_schedule: Dict[str, List[Tuple[float, float]]] = {a["id"]: [] for a in self.antennas}
+        antenna_schedule: dict[str, list[tuple[float, float]]] = {a["id"]: [] for a in self.antennas}
 
         for task in sorted_tasks:
             assigned = False
@@ -52,9 +52,9 @@ class AntennaScheduler:
         }
         return result
 
-    def window_based_schedule(self, tasks: List[ScheduleTask], windows: Dict[str, List[Tuple[float, float]]]) -> ScheduleResult:
+    def window_based_schedule(self, tasks: list[ScheduleTask], windows: dict[str, list[tuple[float, float]]]) -> ScheduleResult:
         result = ScheduleResult()
-        antenna_windows: Dict[str, List[Tuple[float, float, bool]]] = {
+        antenna_windows: dict[str, list[tuple[float, float, bool]]] = {
             a["id"]: [(w[0], w[1], False) for w in windows.get(a["id"], [])] for a in self.antennas
         }
 
@@ -80,10 +80,10 @@ class AntennaScheduler:
         result.metrics = {"scheduled": len(result.tasks), "unscheduled": len(result.unscheduled)}
         return result
 
-    def priority_schedule(self, tasks: List[ScheduleTask]) -> ScheduleResult:
+    def priority_schedule(self, tasks: list[ScheduleTask]) -> ScheduleResult:
         return self.greedy_schedule(tasks)
 
-    def constraint_propagation(self, schedule: ScheduleResult, constraints: List[Dict]) -> ScheduleResult:
+    def constraint_propagation(self, schedule: ScheduleResult, constraints: list[dict]) -> ScheduleResult:
         violated = []
         valid = []
         for task in schedule.tasks:
@@ -101,7 +101,7 @@ class AntennaScheduler:
         schedule.unscheduled.extend(violated)
         return schedule
 
-    def conflict_resolution(self, conflicts: List[Tuple[ScheduleTask, ScheduleTask]], strategy: str = "priority") -> List[ScheduleTask]:
+    def conflict_resolution(self, conflicts: list[tuple[ScheduleTask, ScheduleTask]], strategy: str = "priority") -> list[ScheduleTask]:
         resolved = []
         seen = set()
         for t1, t2 in conflicts:
@@ -118,20 +118,17 @@ class AntennaScheduler:
         return resolved
 
     def _is_available(self, antenna_id: str, start: float, end: float,
-                      schedule: Dict[str, List[Tuple[float, float]]]) -> bool:
-        for s, e in schedule.get(antenna_id, []):
-            if not (end <= s or start >= e):
-                return False
-        return True
+                      schedule: dict[str, list[tuple[float, float]]]) -> bool:
+        return all(end <= s or start >= e for s, e in schedule.get(antenna_id, []))
 
-    def _utilization(self, schedule: Dict[str, List[Tuple[float, float]]]) -> float:
+    def _utilization(self, schedule: dict[str, list[tuple[float, float]]]) -> float:
         total = 0.0
         for slots in schedule.values():
             for s, e in slots:
                 total += e - s
         return total / max(len(self.antennas), 1) / 86400.0
 
-    def _check_constraint(self, task: ScheduleTask, constraint: Dict) -> bool:
+    def _check_constraint(self, task: ScheduleTask, constraint: dict) -> bool:
         ctype = constraint.get("type", "")
         if ctype == "max_duration":
             return (task.end_time - task.start_time) <= constraint.get("value", float('inf'))

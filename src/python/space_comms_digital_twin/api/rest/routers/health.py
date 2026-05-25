@@ -1,5 +1,4 @@
 from fastapi import APIRouter
-
 from space_comms_digital_twin.config import settings
 
 router = APIRouter()

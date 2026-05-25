@@ -1,9 +1,6 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Dict, List
-
-import numpy as np
 
 from space_comms_digital_twin.quantum.optimization.vqe import VQE, VQEResult
 
@@ -11,9 +8,9 @@ from space_comms_digital_twin.quantum.optimization.vqe import VQE, VQEResult
 @dataclass
 class BandwidthProblem:
     n_users: int = 0
-    demands: List[float] = field(default_factory=list)
+    demands: list[float] = field(default_factory=list)
     total_capacity: float = 0.0
-    weights: List[float] = field(default_factory=list)
+    weights: list[float] = field(default_factory=list)
 
 
 class BandwidthAllocationVQE:
@@ -21,9 +18,9 @@ class BandwidthAllocationVQE:
         self.n_layers = n_layers
         self.vqe = VQE(n_qubits=4, n_layers=n_layers)
 
-    def build_problem(self, demands: Dict[str, float],
+    def build_problem(self, demands: dict[str, float],
                       total_capacity: float,
-                      weights: Dict[str, float]) -> BandwidthProblem:
+                      weights: dict[str, float]) -> BandwidthProblem:
         n = len(demands)
         return BandwidthProblem(
             n_users=n,

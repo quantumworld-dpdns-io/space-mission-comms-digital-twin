@@ -1,5 +1,4 @@
-import pytest
-from space_comms_digital_twin.quantum.comms.qkd_protocol import BB84, DecoyStateQKD, CVQKD
+from space_comms_digital_twin.quantum.comms.qkd_protocol import BB84, CVQKD, DecoyStateQKD
 
 
 def test_bb84_key_generation():

@@ -1,4 +1,5 @@
-import pytest
+from datetime import UTC
+
 from space_comms_digital_twin.classical.models.satellite import Satellite
 
 
@@ -11,10 +12,10 @@ def test_satellite_from_tle(sample_tle):
 
 
 def test_satellite_propagate(sample_tle):
-    from datetime import datetime, timezone
+    from datetime import datetime
     lines = sample_tle.strip().split("\n")
     sat = Satellite.from_tle(25544, lines[0], lines[1])
-    pos, vel = sat.propagate_to(datetime.now(timezone.utc))
+    pos, vel = sat.propagate_to(datetime.now(UTC))
     assert len(pos) == 3
     assert len(vel) == 3
 

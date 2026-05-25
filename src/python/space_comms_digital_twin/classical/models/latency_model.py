@@ -3,9 +3,9 @@ from __future__ import annotations
 import math
 import random
 from dataclasses import dataclass, field
-from typing import List
 
 import numpy as np
+
 from space_comms_digital_twin.config import SPEED_OF_LIGHT
 
 
@@ -78,7 +78,7 @@ class LatencySimulator:
         self.rng = random.Random(seed)
 
     def simulate_packet_stream(self, profile: LatencyProfile, num_packets: int,
-                                jitter_variance: float = 0.0) -> List[dict]:
+                                jitter_variance: float = 0.0) -> list[dict]:
         results = []
         for i in range(num_packets):
             base = profile.compute()
@@ -90,7 +90,7 @@ class LatencySimulator:
             results.append(base)
         return results
 
-    def compute_statistics(self, delays: List[float]) -> dict:
+    def compute_statistics(self, delays: list[float]) -> dict:
         arr = np.array(delays)
         return {
             "min": float(np.min(arr)),

@@ -1,8 +1,6 @@
-import pytest
-import numpy as np
+from space_comms_digital_twin.quantum.optimization.grover_search import GroverSearch
 from space_comms_digital_twin.quantum.optimization.qaoa import QAOA
 from space_comms_digital_twin.quantum.optimization.vqe import VQE
-from space_comms_digital_twin.quantum.optimization.grover_search import GroverSearch
 
 
 def test_qaoa_hamiltonian():

@@ -3,14 +3,13 @@ from __future__ import annotations
 import threading
 import time
 from collections import defaultdict
-from typing import Dict, List, Optional
 
 
 class MetricsCollector:
-    _instance: Optional["MetricsCollector"] = None
+    _instance: MetricsCollector | None = None
     _lock = threading.Lock()
 
-    def __new__(cls) -> "MetricsCollector":
+    def __new__(cls) -> MetricsCollector:
         if cls._instance is None:
             with cls._lock:
                 if cls._instance is None:
@@ -21,9 +20,9 @@ class MetricsCollector:
     def __init__(self) -> None:
         if getattr(self, "_initialized", False):
             return
-        self._counters: Dict[str, int] = defaultdict(int)
-        self._gauges: Dict[str, float] = {}
-        self._histograms: Dict[str, List[float]] = defaultdict(list)
+        self._counters: dict[str, int] = defaultdict(int)
+        self._gauges: dict[str, float] = {}
+        self._histograms: dict[str, list[float]] = defaultdict(list)
         self._lock = threading.Lock()
         self._initialized = True
 
@@ -39,10 +38,10 @@ class MetricsCollector:
         with self._lock:
             self._histograms[name].append(value)
 
-    def time(self, name: str) -> "_Timer":
+    def time(self, name: str) -> _Timer:
         return _Timer(self, name)
 
-    def snapshot(self) -> Dict[str, Dict]:
+    def snapshot(self) -> dict[str, dict]:
         with self._lock:
             hist_summary = {}
             for k, v in self._histograms.items():
@@ -72,7 +71,7 @@ class _Timer:
         self.name = name
         self.start: float = 0.0
 
-    def __enter__(self) -> "_Timer":
+    def __enter__(self) -> _Timer:
         self.start = time.monotonic()
         return self
 

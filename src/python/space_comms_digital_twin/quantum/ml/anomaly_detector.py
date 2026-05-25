@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Any, Dict, List, Optional
 
 import numpy as np
 from numpy.typing import NDArray
@@ -12,8 +11,8 @@ from space_comms_digital_twin.quantum.ml.qsvm import QSVM
 @dataclass
 class AnomalyResult:
     n_anomalies: int = 0
-    anomaly_scores: List[float] = field(default_factory=list)
-    anomaly_indices: List[int] = field(default_factory=list)
+    anomaly_scores: list[float] = field(default_factory=list)
+    anomaly_indices: list[int] = field(default_factory=list)
     threshold: float = 0.0
     precision: float = 0.0
     recall: float = 0.0
@@ -31,7 +30,7 @@ class QuantumAnomalyDetector:
         features = []
         for sample in telemetry:
             encoded = []
-            for i, val in enumerate(sample):
+            for _i, val in enumerate(sample):
                 angle = np.arctan(val) / (np.pi / 2)
                 encoded.append(angle)
             features.append(encoded)
@@ -40,7 +39,7 @@ class QuantumAnomalyDetector:
     def fit(self, X: NDArray) -> AnomalyResult:
         encoded = self._encode_telemetry(X)
         y = np.ones(len(encoded))
-        result = self.qsvm.fit(encoded, y, C=1.0 / self.nu)
+        self.qsvm.fit(encoded, y, C=1.0 / self.nu)
         scores = self.qsvm.decision_function(encoded)
         self.rho_ = np.percentile(scores, int(self.nu * 100))
         return AnomalyResult(

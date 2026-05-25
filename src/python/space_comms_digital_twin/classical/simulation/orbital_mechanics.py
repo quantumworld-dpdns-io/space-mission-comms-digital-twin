@@ -1,12 +1,12 @@
 from __future__ import annotations
 
 import math
-from typing import Callable, Optional, Tuple
+from collections.abc import Callable
 
 import numpy as np
 from numpy.typing import NDArray
 
-from space_comms_digital_twin.config import EARTH_MU, EARTH_RADIUS, EARTH_ROTATION_RATE
+from space_comms_digital_twin.config import EARTH_MU, EARTH_RADIUS
 
 
 def kepler_propagate(elements: dict, delta_t: float) -> dict:
@@ -29,7 +29,7 @@ def _solve_kepler(M: float, e: float, tol: float = 1e-10, max_iter: int = 100) -
     return E
 
 
-def sgp4_propagate(tle_line1: str, tle_line2: str, epoch: object) -> Tuple[NDArray, NDArray]:
+def sgp4_propagate(tle_line1: str, tle_line2: str, epoch: object) -> tuple[NDArray, NDArray]:
     from sgp4.api import Satrec, jday
     sat = Satrec.twoline2rv(tle_line1, tle_line2)
     jd, fr = jday(
@@ -61,7 +61,7 @@ def eci_to_ecef(eci_pos: NDArray, gmst: float) -> NDArray:
     return rot @ eci_pos
 
 
-def ecef_to_lla(ecef_pos: NDArray) -> Tuple[float, float, float]:
+def ecef_to_lla(ecef_pos: NDArray) -> tuple[float, float, float]:
     x, y, z = ecef_pos
     lon = math.degrees(math.atan2(y, x))
     p = math.sqrt(x ** 2 + y ** 2)
@@ -81,7 +81,7 @@ def lla_to_ecef(lat_deg: float, lon_deg: float, alt_m: float) -> NDArray:
     ])
 
 
-def eci_to_topo(eci_pos: NDArray, observer_ecef: NDArray, gmst: float) -> Tuple[float, float, float]:
+def eci_to_topo(eci_pos: NDArray, observer_ecef: NDArray, gmst: float) -> tuple[float, float, float]:
     ecef = eci_to_ecef(eci_pos, gmst)
     los = ecef - observer_ecef
     r = np.linalg.norm(los)
@@ -161,8 +161,8 @@ def compute_eclipse(sat_pos: NDArray, sun_pos: NDArray) -> bool:
 
 
 def sun_vector_at_time(epoch: object) -> NDArray:
-    from astropy.time import Time
     from astropy.coordinates import get_sun
+    from astropy.time import Time
     t = Time(epoch)
     sun = get_sun(t)
     cart = sun.represent_as('cartesian')
@@ -177,7 +177,7 @@ def multi_satellite_propagation(satellites: list, times: NDArray) -> NDArray:
     positions = []
     for sat in satellites:
         sat_positions = []
-        for t in times:
+        for _t in times:
             pos = sat.get_position_eci()
             sat_positions.append(pos)
         positions.append(sat_positions)
@@ -186,7 +186,7 @@ def multi_satellite_propagation(satellites: list, times: NDArray) -> NDArray:
 
 def constellation_coverage(constellation: list, ground_points: NDArray, time: object) -> NDArray:
     coverage = []
-    for point in ground_points:
+    for _point in ground_points:
         covered = False
         for sat in constellation:
             pos = sat.get_position_eci(time)

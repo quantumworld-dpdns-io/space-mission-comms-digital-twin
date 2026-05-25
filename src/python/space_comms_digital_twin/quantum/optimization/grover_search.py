@@ -1,15 +1,15 @@
 from __future__ import annotations
 
 import math
-from dataclasses import dataclass, field
-from typing import Callable, List, Optional
+from collections.abc import Callable
+from dataclasses import dataclass
 
 import numpy as np
 
 
 @dataclass
 class GroverResult:
-    found_solution: Optional[int] = None
+    found_solution: int | None = None
     n_iterations: int = 0
     success_probability: float = 0.0
     optimal_iterations: int = 0
@@ -73,9 +73,8 @@ class GroverSearch:
         return max(1, int((math.pi / 4) * math.sqrt(self.dim / num_solutions)))
 
     def fixed_point_search(self, oracle_matrix: np.ndarray) -> GroverResult:
-        lambda_val = 1.0
         for k in range(1, 100):
-            theta_k = math.pi / (2.0 * k + 2.0)
+            math.pi / (2.0 * k + 2.0)
             state = np.ones(self.dim, dtype=complex) / math.sqrt(self.dim)
             for _ in range(k):
                 state = oracle_matrix @ state

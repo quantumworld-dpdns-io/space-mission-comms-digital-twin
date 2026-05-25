@@ -1,8 +1,6 @@
 from __future__ import annotations
 
-from typing import Any, Dict, List, Optional
-
-import numpy as np
+from typing import Any
 
 from space_comms_digital_twin.quantum.simulation.backend_interface import (
     BackendResult,
@@ -20,7 +18,7 @@ class StrawberryFieldsBackend(QuantumBackend):
     def max_qubits(self) -> int:
         return 6
 
-    def gate_set(self) -> List[str]:
+    def gate_set(self) -> list[str]:
         return ["Sgate", "Dgate", "BSgate", "S2gate", "Rgate", "Kgate",
                 "MeasureFock", "MeasureHomodyne", "MeasureHeterodyne"]
 
@@ -61,8 +59,8 @@ class StrawberryFieldsBackend(QuantumBackend):
         except ImportError:
             raise ImportError("Strawberry Fields not installed. Install with: pip install strawberryfields")
 
-    def get_noise_model(self) -> Optional[Any]:
+    def get_noise_model(self) -> Any | None:
         return {"loss": 0.1, "phase_noise": 0.01}
 
-    def estimate_resources(self, circuit: Any) -> Dict[str, Any]:
+    def estimate_resources(self, circuit: Any) -> dict[str, Any]:
         return {"modes": circuit.get("qubits", 0), "gates": len(circuit.get("operations", [])), "cutoff_dim": 6}

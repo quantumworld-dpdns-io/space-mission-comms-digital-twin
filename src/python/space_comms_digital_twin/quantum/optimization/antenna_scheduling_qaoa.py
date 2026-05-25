@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any
 
 import numpy as np
 
@@ -13,10 +13,10 @@ class AntennaScheduleProblem:
     n_antennas: int = 0
     n_time_slots: int = 0
     n_tasks: int = 0
-    task_weights: List[float] = field(default_factory=list)
+    task_weights: list[float] = field(default_factory=list)
     overlap_matrix: np.ndarray = field(default_factory=lambda: np.zeros((1, 1)))
-    time_windows: List[Tuple[int, int]] = field(default_factory=list)
-    antenna_task_map: Dict[int, List[int]] = field(default_factory=dict)
+    time_windows: list[tuple[int, int]] = field(default_factory=list)
+    antenna_task_map: dict[int, list[int]] = field(default_factory=dict)
 
 
 class AntennaSchedulingQAOA:
@@ -25,7 +25,7 @@ class AntennaSchedulingQAOA:
         self.qaoa = QAOA(n_layers=n_layers)
 
     def build_problem(self, n_antennas: int, n_time_slots: int,
-                      tasks: List[Dict[str, Any]]) -> AntennaScheduleProblem:
+                      tasks: list[dict[str, Any]]) -> AntennaScheduleProblem:
         n_tasks = len(tasks)
         task_weights = [t.get("priority", 1) for t in tasks]
         overlap = np.zeros((n_tasks, n_tasks))

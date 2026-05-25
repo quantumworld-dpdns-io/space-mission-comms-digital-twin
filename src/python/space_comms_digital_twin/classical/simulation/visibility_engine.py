@@ -1,15 +1,12 @@
 from __future__ import annotations
 
 import math
-from typing import List, Optional, Tuple
 
 import numpy as np
 from numpy.typing import NDArray
 
-from space_comms_digital_twin.config import EARTH_RADIUS
 
-
-def check_horizon_elevation(sat_az_el: Tuple[float, float, float], station_mask_deg: float) -> bool:
+def check_horizon_elevation(sat_az_el: tuple[float, float, float], station_mask_deg: float) -> bool:
     _, el, _ = sat_az_el
     return el >= station_mask_deg
 
@@ -17,7 +14,7 @@ def check_horizon_elevation(sat_az_el: Tuple[float, float, float], station_mask_
 def elevation_angle(sat_pos: NDArray, station_pos: NDArray) -> float:
     los = sat_pos - station_pos
     r_los = np.linalg.norm(los)
-    r_sat = np.linalg.norm(sat_pos)
+    np.linalg.norm(sat_pos)
     r_station = np.linalg.norm(station_pos)
     cos_zenith = np.dot(los, station_pos) / (r_los * r_station)
     zenith = math.acos(max(-1.0, min(1.0, cos_zenith)))
@@ -36,12 +33,11 @@ def compute_range_rate(sat_vel: NDArray, station_pos: NDArray, sat_pos: NDArray)
     return float(np.dot(sat_vel, los) / r_los)
 
 
-def contact_window(satellite, station, start_time, end_time, time_step: float = 10.0) -> List[dict]:
+def contact_window(satellite, station, start_time, end_time, time_step: float = 10.0) -> list[dict]:
     windows = []
     current_time = start_time
     in_contact = False
     contact_start = None
-    contacts = []
 
     while current_time <= end_time:
         try:
@@ -56,7 +52,7 @@ def contact_window(satellite, station, start_time, end_time, time_step: float = 
             current_time += time_step
             continue
 
-        _, el, rng = az_el_range
+        _, el, _rng = az_el_range
         visible = el >= station.elevation_mask
 
         if visible and not in_contact:
@@ -87,7 +83,7 @@ def contact_window(satellite, station, start_time, end_time, time_step: float = 
     return windows
 
 
-def multi_site_visibility(satellite, stations: list, time: object) -> List[dict]:
+def multi_site_visibility(satellite, stations: list, time: object) -> list[dict]:
     results = []
     sat_pos = satellite.get_position_eci(time)
     for station in stations:
@@ -103,7 +99,7 @@ def multi_site_visibility(satellite, stations: list, time: object) -> List[dict]
     return results
 
 
-def handover_prediction(satellites: list, stations: list, times: List[object]) -> List[dict]:
+def handover_prediction(satellites: list, stations: list, times: list[object]) -> list[dict]:
     schedule = []
     for t in times:
         best_el = -90.0
@@ -127,12 +123,12 @@ def handover_prediction(satellites: list, stations: list, times: List[object]) -
 
 def coverage_map(satellites: list, lat_grid: NDArray, lon_grid: NDArray, time: object) -> NDArray:
     coverage = np.zeros((len(lat_grid), len(lon_grid)), dtype=bool)
-    for i, lat in enumerate(lat_grid):
-        for j, lon in enumerate(lon_grid):
+    for i, _lat in enumerate(lat_grid):
+        for j, _lon in enumerate(lon_grid):
             for sat in satellites:
                 try:
                     sat_pos = sat.get_position_eci(time)
-                    az, el, rng = 0.0, 0.0, 0.0
+                    _az, el, _rng = 0.0, 0.0, 0.0
                     r_sat = np.linalg.norm(sat_pos)
                     if r_sat == 0:
                         continue

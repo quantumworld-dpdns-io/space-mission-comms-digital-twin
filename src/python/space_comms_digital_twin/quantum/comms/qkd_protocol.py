@@ -5,18 +5,17 @@ import hmac
 import math
 import secrets
 from dataclasses import dataclass, field
-from typing import List, Optional, Tuple
 
 import numpy as np
 
 
 @dataclass
 class QKDResult:
-    key: Optional[str] = None
+    key: str | None = None
     key_length: int = 0
     qber: float = 0.0
     key_rate: float = 0.0
-    sifted_bits: List[int] = field(default_factory=list)
+    sifted_bits: list[int] = field(default_factory=list)
     total_bits_sent: int = 0
     error_corrected: bool = False
     privacy_amplified: bool = False
@@ -36,10 +35,9 @@ class BB84:
 
         sifted = []
         for i in range(n):
-            if alice_bases[i] == bob_bases[i]:
-                if self._rng.random() > channel_loss:
-                    err = 1 if self._rng.random() < self.error_rate else 0
-                    sifted.append(alice_bits[i] ^ err)
+            if alice_bases[i] == bob_bases[i] and self._rng.random() > channel_loss:
+                err = 1 if self._rng.random() < self.error_rate else 0
+                sifted.append(alice_bits[i] ^ err)
 
         key_len = len(sifted)
         sifted_str = "".join(str(b) for b in sifted)
@@ -61,10 +59,10 @@ class BB84:
             privacy_amplified=bool(privacy_amp),
         )
 
-    def _compute_qber(self, alice: List[int], bob: List[int]) -> float:
+    def _compute_qber(self, alice: list[int], bob: list[int]) -> float:
         if not bob:
             return 1.0
-        errors = sum(1 for a, b in zip(alice, bob) if a != b)
+        errors = sum(1 for a, b in zip(alice, bob, strict=False) if a != b)
         return errors / len(bob)
 
     def _compute_key_rate(self, sifted_len: int, total: int, qber: float) -> float:
@@ -76,7 +74,7 @@ class BB84:
             return r_raw * r_ec
         return 0.0
 
-    def _cascade_correct(self, bits: List[int]) -> bool:
+    def _cascade_correct(self, bits: list[int]) -> bool:
         return True
 
     def _privacy_amplification(self, bitstring: str, output_bits: int) -> str:

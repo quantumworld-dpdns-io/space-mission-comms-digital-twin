@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 import numpy as np
 
@@ -10,20 +10,20 @@ import numpy as np
 class TeleportationResult:
     success: bool = False
     fidelity: float = 0.0
-    alice_state: Optional[Any] = None
-    bob_state: Optional[Any] = None
-    bell_state_used: Optional[Any] = None
-    measurements: List[int] = field(default_factory=list)
+    alice_state: Any | None = None
+    bob_state: Any | None = None
+    bell_state_used: Any | None = None
+    measurements: list[int] = field(default_factory=list)
 
 
 class QuantumTeleportation:
-    def __init__(self, noise_model: Optional[Dict[str, float]] = None):
+    def __init__(self, noise_model: dict[str, float] | None = None):
         self.noise_model = noise_model or {}
 
-    def run(self, input_state: Optional[Any] = None) -> TeleportationResult:
+    def run(self, input_state: Any | None = None) -> TeleportationResult:
         try:
             import qiskit
-            from qiskit import QuantumCircuit, QuantumRegister, ClassicalRegister
+            from qiskit import ClassicalRegister, QuantumCircuit, QuantumRegister
             from qiskit_aer import AerSimulator
 
             qr = QuantumRegister(3, "q")
@@ -76,5 +76,5 @@ class QuantumTeleportation:
             return float(overlap)
         return 0.0
 
-    def run_entanglement_swapping(self) -> Dict[str, Any]:
+    def run_entanglement_swapping(self) -> dict[str, Any]:
         return {"success": True, "fidelity": 0.95}

@@ -1,13 +1,11 @@
 from __future__ import annotations
 
+from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
-from typing import AsyncGenerator
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.middleware.trustedhost import TrustedHostMiddleware
-
-from space_comms_digital_twin.api.rest.routers import simulation, quantum, optimization, health, metrics
+from space_comms_digital_twin.api.rest.routers import health, metrics, optimization, quantum, simulation
 from space_comms_digital_twin.config import settings
 from space_comms_digital_twin.utils.logger import get_logger
 

@@ -1,7 +1,6 @@
-from typing import Any, Dict, Optional
+from typing import Any
 
 from fastapi import APIRouter, HTTPException
-
 from space_comms_digital_twin.services.simulation_service import SimulationService
 
 router = APIRouter()
@@ -9,7 +8,7 @@ service = SimulationService()
 
 
 @router.post("/run")
-async def run_simulation(params: Dict[str, Any]):
+async def run_simulation(params: dict[str, Any]):
     job = service.run_classical_simulation(params)
     return {"job_id": job.id, "status": job.status}
 

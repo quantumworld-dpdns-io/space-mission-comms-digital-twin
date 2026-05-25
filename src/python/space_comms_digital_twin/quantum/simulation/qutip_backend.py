@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 import numpy as np
 
@@ -20,7 +20,7 @@ class QuTiPBackend(QuantumBackend):
     def max_qubits(self) -> int:
         return 12
 
-    def gate_set(self) -> List[str]:
+    def gate_set(self) -> list[str]:
         return ["H", "X", "Y", "Z", "S", "T", "CNOT", "CZ", "SWAP", "RX", "RY", "RZ"]
 
     def run_circuit(self, circuit: Any, shots: int = 1024, **kwargs: Any) -> BackendResult:
@@ -50,15 +50,15 @@ class QuTiPBackend(QuantumBackend):
         except ImportError:
             raise ImportError("QuTiP not installed. Install with: pip install qutip")
 
-    def get_noise_model(self) -> Optional[Any]:
+    def get_noise_model(self) -> Any | None:
         try:
             import qutip as qt
             return {"collapse_operators": [qt.sigmaz()], "T1": 1e3, "T2": 1e3}
         except ImportError:
             return None
 
-    def run_master_equation(self, H: Any, psi0: Any, tlist: List[float],
-                            c_ops: List[Any] = None, **kwargs: Any) -> Dict[str, Any]:
+    def run_master_equation(self, H: Any, psi0: Any, tlist: list[float],
+                            c_ops: list[Any] | None = None, **kwargs: Any) -> dict[str, Any]:
         try:
             import qutip as qt
             if c_ops is None:

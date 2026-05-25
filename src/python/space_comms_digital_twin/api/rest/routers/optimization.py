@@ -1,7 +1,6 @@
-from typing import Any, Dict, List
+from typing import Any
 
 from fastapi import APIRouter, HTTPException
-
 from space_comms_digital_twin.services.optimization_service import OptimizationService
 
 router = APIRouter()
@@ -9,7 +8,7 @@ service = OptimizationService()
 
 
 @router.post("/antenna-schedule")
-async def optimize_antenna_schedule(tasks: List[Dict], antennas: List[Dict]):
+async def optimize_antenna_schedule(tasks: list[dict], antennas: list[dict]):
     job = service.run_antenna_scheduling(tasks, antennas)
     return {"job_id": job.id, "status": job.status, "result": job.result}
 
@@ -21,7 +20,7 @@ async def run_quantum_optimization(problem_type: str = "qaoa", n_qubits: int = 4
 
 
 @router.post("/route")
-async def optimize_route(params: Dict[str, Any]):
+async def optimize_route(params: dict[str, Any]):
     graph = params.get("graph", {})
     source = params.get("source", "")
     target = params.get("target", "")

@@ -1,12 +1,12 @@
 from __future__ import annotations
 
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 import numpy as np
 
 
 class AnalyticsService:
-    def aggregate_simulation_results(self, results: List[Dict[str, Any]]) -> Dict[str, Any]:
+    def aggregate_simulation_results(self, results: list[dict[str, Any]]) -> dict[str, Any]:
         if not results:
             return {}
         snr_values = [r.get("snr_db", 0) for r in results if "snr_db" in r]
@@ -24,8 +24,8 @@ class AnalyticsService:
             "count": len(results),
         }
 
-    def compare_classical_quantum(self, classical_result: Dict,
-                                   quantum_result: Dict) -> Dict[str, Any]:
+    def compare_classical_quantum(self, classical_result: dict,
+                                   quantum_result: dict) -> dict[str, Any]:
         return {
             "classical_optimal": classical_result.get("optimal_value", 0),
             "quantum_optimal": quantum_result.get("optimal_value", 0),
@@ -34,7 +34,7 @@ class AnalyticsService:
                             classical_result.get("optimal_value", 0)),
         }
 
-    def generate_report(self, data: Dict[str, Any]) -> Dict[str, Any]:
+    def generate_report(self, data: dict[str, Any]) -> dict[str, Any]:
         return {
             "summary": self.aggregate_simulation_results(data.get("results", [])),
             "comparison": self.compare_classical_quantum(
@@ -45,7 +45,7 @@ class AnalyticsService:
         }
 
     @staticmethod
-    def _generate_recommendations(data: Dict[str, Any]) -> List[str]:
+    def _generate_recommendations(data: dict[str, Any]) -> list[str]:
         recs = []
         results = data.get("results", [])
         for r in results:

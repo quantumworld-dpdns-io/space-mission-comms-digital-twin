@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from space_comms_digital_twin.quantum.simulation.backend_interface import (
     BackendResult,
@@ -18,7 +18,7 @@ class QiskitBackend(QuantumBackend):
     def max_qubits(self) -> int:
         return 32
 
-    def gate_set(self) -> List[str]:
+    def gate_set(self) -> list[str]:
         return ["H", "X", "Y", "Z", "S", "T", "SDG", "TDG", "SX", "CNOT", "CZ",
                 "SWAP", "CCX", "RX", "RY", "RZ", "CRX", "CRY", "CRZ", "U1", "U2", "U3"]
 
@@ -38,7 +38,7 @@ class QiskitBackend(QuantumBackend):
         except ImportError:
             raise ImportError("Qiskit not installed. Install with: pip install qiskit qiskit-aer")
 
-    def get_noise_model(self) -> Optional[Any]:
+    def get_noise_model(self) -> Any | None:
         try:
             from qiskit_aer.noise import NoiseModel
             return NoiseModel()
@@ -52,7 +52,7 @@ class QiskitBackend(QuantumBackend):
         except Exception:
             return False
 
-    def estimate_resources(self, circuit: Any) -> Dict[str, Any]:
+    def estimate_resources(self, circuit: Any) -> dict[str, Any]:
         try:
             ops = circuit.count_ops()
             depth = circuit.depth()
@@ -61,5 +61,5 @@ class QiskitBackend(QuantumBackend):
         except Exception:
             return {"qubits": 0, "gates": 0, "depth": 0}
 
-    def calibrate(self) -> Dict[str, Any]:
+    def calibrate(self) -> dict[str, Any]:
         return {"status": "ok", "simulator": "qiskit-aer", "version": "1.0+"}

@@ -2,15 +2,12 @@ from __future__ import annotations
 
 import math
 import random
-from typing import Dict, Generator, List, Optional, Tuple
-
-import numpy as np
-from numpy.typing import NDArray
+from collections.abc import Generator
 
 from space_comms_digital_twin.config import CCSDS_HEADER_SIZE, CFDP_MAX_PDU_SIZE
 
 
-def poisson_traffic(lambda_rate: float, duration: float, seed: Optional[int] = None) -> Generator:
+def poisson_traffic(lambda_rate: float, duration: float, seed: int | None = None) -> Generator:
     rng = random.Random(seed)
     t = 0.0
     packet_id = 0
@@ -29,7 +26,7 @@ def poisson_traffic(lambda_rate: float, duration: float, seed: Optional[int] = N
 
 
 def bursty_traffic(mean_burst_size: float, mean_idle_time: float,
-                   packet_rate: float, duration: float, seed: Optional[int] = None) -> Generator:
+                   packet_rate: float, duration: float, seed: int | None = None) -> Generator:
     rng = random.Random(seed)
     t = 0.0
     packet_id = 0
@@ -81,10 +78,10 @@ def variable_bit_rate(mean_rate: float, peak_rate: float, packet_size: int = 150
         t += interval
 
 
-def priority_queue(packets: List[dict], priorities: Optional[List[int]] = None) -> List[dict]:
+def priority_queue(packets: list[dict], priorities: list[int] | None = None) -> list[dict]:
     if priorities is None:
         priorities = [0] * len(packets)
-    indexed = list(zip(priorities, range(len(packets)), packets))
+    indexed = list(zip(priorities, range(len(packets)), packets, strict=False))
     indexed.sort(key=lambda x: (-x[0], x[1]))
     return [p for _, _, p in indexed]
 
@@ -117,7 +114,7 @@ def cfdp_transaction(source: str, dest: str, file_size: int, pdu_size: int = CFD
 
 
 def packet_loss_model(loss_rate: float, distribution: str = "bernoulli",
-                      seed: Optional[int] = None) -> Generator:
+                      seed: int | None = None) -> Generator:
     rng = random.Random(seed)
     while True:
         if distribution == "bernoulli":

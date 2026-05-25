@@ -1,4 +1,3 @@
-import pytest
 from space_comms_digital_twin.services.quantum_service import QuantumService
 
 

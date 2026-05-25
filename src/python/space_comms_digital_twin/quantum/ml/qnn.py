@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import math
 from dataclasses import dataclass, field
-from typing import Any, Callable, Dict, List, Optional, Tuple
 
 import numpy as np
 from numpy.typing import NDArray
@@ -11,7 +10,7 @@ from numpy.typing import NDArray
 @dataclass
 class QNNResult:
     accuracy: float = 0.0
-    loss_history: List[float] = field(default_factory=list)
+    loss_history: list[float] = field(default_factory=list)
     n_epochs: int = 0
     n_parameters: int = 0
     final_loss: float = 0.0
@@ -61,7 +60,7 @@ class QNN:
         n = len(X)
         loss_history = []
 
-        for epoch in range(epochs):
+        for _epoch in range(epochs):
             idx = np.random.permutation(n)
             epoch_loss = 0.0
             n_batches = max(1, n // batch_size)
@@ -141,7 +140,7 @@ class QNN:
         new_state = np.zeros(dim, dtype=complex)
         for k in range(dim):
             b1 = (k >> q1) & 1
-            b2 = (k >> q2) & 1
+            (k >> q2) & 1
             if b1 == 1:
                 target = k ^ (1 << q2)
                 new_state[k] = state[target]

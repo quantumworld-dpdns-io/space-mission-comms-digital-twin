@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 import numpy as np
 
@@ -20,7 +20,7 @@ class CirqBackend(QuantumBackend):
     def max_qubits(self) -> int:
         return 25
 
-    def gate_set(self) -> List[str]:
+    def gate_set(self) -> list[str]:
         return ["H", "X", "Y", "Z", "S", "T", "CNOT", "CZ", "SWAP",
                 "ISWAP", "CCX", "CCZ", "RX", "RY", "RZ", "XPow", "ZPow", "PhasedXPow"]
 
@@ -30,7 +30,7 @@ class CirqBackend(QuantumBackend):
             simulator = cirq.Simulator()
             if shots > 0:
                 result = simulator.run(circuit, repetitions=shots)
-                counts = result.histogram(key="m" if "m" in result.measurements else list(result.measurements.keys())[0])
+                counts = result.histogram(key="m" if "m" in result.measurements else next(iter(result.measurements.keys())))
                 str_counts = {format(k, f'0{circuit.all_qubits().__len__() if circuit.all_qubits() else 1}b'): v for k, v in counts.items()}
                 return BackendResult(
                     counts=str_counts,
@@ -50,14 +50,14 @@ class CirqBackend(QuantumBackend):
         except ImportError:
             raise ImportError("Cirq not installed. Install with: pip install cirq")
 
-    def get_noise_model(self) -> Optional[Any]:
+    def get_noise_model(self) -> Any | None:
         try:
             import cirq
             return cirq.ConstantQubitNoiseModel(cirq.depolarize(0.01))
         except ImportError:
             return None
 
-    def estimate_resources(self, circuit: Any) -> Dict[str, Any]:
+    def estimate_resources(self, circuit: Any) -> dict[str, Any]:
         try:
             moments = len(circuit)
             ops = sum(1 for _ in circuit.all_operations())

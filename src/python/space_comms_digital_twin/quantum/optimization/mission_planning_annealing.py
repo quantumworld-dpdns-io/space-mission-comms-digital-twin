@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Any, Dict, List
+from typing import Any
 
 import numpy as np
 
@@ -14,10 +14,10 @@ from space_comms_digital_twin.quantum.optimization.quantum_annealing import (
 @dataclass
 class MissionPlanningProblem:
     n_tasks: int = 0
-    priorities: List[float] = field(default_factory=list)
-    durations: List[float] = field(default_factory=list)
+    priorities: list[float] = field(default_factory=list)
+    durations: list[float] = field(default_factory=list)
     conflicts: np.ndarray = field(default_factory=lambda: np.zeros((1, 1)))
-    weather_dependency: List[float] = field(default_factory=list)
+    weather_dependency: list[float] = field(default_factory=list)
     deadline: float = 0.0
 
 
@@ -26,7 +26,7 @@ class MissionPlanningAnnealing:
         self.n_qubits = n_qubits
         self.annealer = QuantumAnnealing(n_qubits=n_qubits)
 
-    def build_problem(self, tasks: List[Dict[str, Any]],
+    def build_problem(self, tasks: list[dict[str, Any]],
                       deadline: float) -> MissionPlanningProblem:
         n = len(tasks)
         priorities = [t.get("priority", 1) for t in tasks]

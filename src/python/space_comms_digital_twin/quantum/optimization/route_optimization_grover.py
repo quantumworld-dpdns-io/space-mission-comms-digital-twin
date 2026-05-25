@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Dict, List, Optional, Tuple
 
 import numpy as np
 
@@ -25,7 +24,7 @@ class RouteOptimizationGrover:
         self.n_qubits = n_qubits
         self.grover = GroverSearch(n_qubits=n_qubits)
 
-    def build_problem(self, n_nodes: int, edges: List[Tuple[int, int, float]],
+    def build_problem(self, n_nodes: int, edges: list[tuple[int, int, float]],
                       source: int, target: int,
                       max_hops: int = 3) -> RouteProblem:
         adj = np.full((n_nodes, n_nodes), float('inf'))
@@ -42,13 +41,13 @@ class RouteOptimizationGrover:
             max_hops=max_hops,
         )
 
-    def _encode_path(self, path: List[int], n_nodes: int) -> int:
+    def _encode_path(self, path: list[int], n_nodes: int) -> int:
         encoding = 0
         for node in path:
             encoding = (encoding << (n_nodes.bit_length())) | node
         return encoding
 
-    def _decode_path(self, encoded: int, n_nodes: int, hops: int) -> List[int]:
+    def _decode_path(self, encoded: int, n_nodes: int, hops: int) -> list[int]:
         path = []
         bits = n_nodes.bit_length() or 1
         mask = (1 << bits) - 1
@@ -59,7 +58,7 @@ class RouteOptimizationGrover:
         return list(reversed(path))
 
     def solve(self, problem: RouteProblem) -> GroverResult:
-        n_qubits = min(self.n_qubits, 4)
+        min(self.n_qubits, 4)
 
         def predicate(state: int) -> bool:
             path = self._decode_path(state, problem.n_nodes, 2)
@@ -76,7 +75,7 @@ class RouteOptimizationGrover:
         result = self.grover.search(O)
         return result
 
-    def compare_with_classical(self, problem: RouteProblem) -> Dict[str, float]:
+    def compare_with_classical(self, problem: RouteProblem) -> dict[str, float]:
         quantum_result = self.solve(problem).success_probability
         return {
             "quantum_success_probability": quantum_result,

@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from space_comms_digital_twin.quantum.simulation.backend_interface import (
     BackendResult,
@@ -18,7 +18,7 @@ class CUDAQBackend(QuantumBackend):
     def max_qubits(self) -> int:
         return 30
 
-    def gate_set(self) -> List[str]:
+    def gate_set(self) -> list[str]:
         return ["H", "X", "Y", "Z", "S", "T", "CNOT", "CZ", "SWAP", "RX", "RY", "RZ"]
 
     def run_circuit(self, circuit: Any, shots: int = 1024, **kwargs: Any) -> BackendResult:
@@ -35,7 +35,7 @@ class CUDAQBackend(QuantumBackend):
         except ImportError:
             raise ImportError("CUDA-Q not installed. Install with: pip install cudaq")
 
-    def get_noise_model(self) -> Optional[Any]:
+    def get_noise_model(self) -> Any | None:
         try:
             import cudaq
             noise = cudaq.NoiseModel()
@@ -43,5 +43,5 @@ class CUDAQBackend(QuantumBackend):
         except ImportError:
             return None
 
-    def estimate_resources(self, circuit: Any) -> Dict[str, Any]:
+    def estimate_resources(self, circuit: Any) -> dict[str, Any]:
         return {"qubits": 2, "gates": 2, "depth": 2, "gpu_required": True}

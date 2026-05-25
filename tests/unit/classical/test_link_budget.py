@@ -1,11 +1,11 @@
 import math
-import pytest
+
 from space_comms_digital_twin.classical.models.link_budget import (
     LinkBudgetCalculator,
     LinkBudgetParams,
-    friis_transmission_loss,
-    calculate_snr,
     calculate_link_margin,
+    calculate_snr,
+    friis_transmission_loss,
 )
 
 

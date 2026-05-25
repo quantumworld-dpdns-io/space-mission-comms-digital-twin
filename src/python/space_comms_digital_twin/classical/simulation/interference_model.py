@@ -1,9 +1,6 @@
 from __future__ import annotations
 
 import math
-from typing import Optional
-
-import numpy as np
 
 
 def adjacent_satellite_interference(d_theta_deg: float, pattern: str = "ideal", gain_max_dbi: float = 40.0) -> float:
@@ -38,7 +35,6 @@ def interference_to_noise_ratio(interference_power: float, noise_power: float) -
 
 def terrestrial_interference(terrestrial_eirp: float, rx_gain: float,
                              distance: float, frequency_ghz: float) -> float:
-    from .link_budget import friis_transmission_loss
     wavelength = 299792458.0 / (frequency_ghz * 1e9)
     path_loss = (4.0 * math.pi * distance / wavelength) ** 2
     return terrestrial_eirp * rx_gain / path_loss

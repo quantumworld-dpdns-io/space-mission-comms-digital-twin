@@ -2,32 +2,30 @@ from __future__ import annotations
 
 import uuid
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
-from typing import Any, Dict, List, Optional
+from datetime import UTC, datetime
+from typing import Any
 
 from space_comms_digital_twin.classical.models.link_budget import (
     LinkBudgetCalculator,
     LinkBudgetParams,
 )
-from space_comms_digital_twin.classical.models.satellite import Satellite
-from space_comms_digital_twin.classical.simulation.visibility_engine import contact_window
 
 
 @dataclass
 class SimulationJob:
     id: str = ""
     status: str = "pending"
-    created_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
-    completed_at: Optional[datetime] = None
-    result: Optional[Dict[str, Any]] = None
-    error: Optional[str] = None
+    created_at: datetime = field(default_factory=lambda: datetime.now(UTC))
+    completed_at: datetime | None = None
+    result: dict[str, Any] | None = None
+    error: str | None = None
 
 
 class SimulationService:
     def __init__(self):
-        self.jobs: Dict[str, SimulationJob] = {}
+        self.jobs: dict[str, SimulationJob] = {}
 
-    def run_classical_simulation(self, params: Dict[str, Any]) -> SimulationJob:
+    def run_classical_simulation(self, params: dict[str, Any]) -> SimulationJob:
         job_id = str(uuid.uuid4())
         job = SimulationJob(id=job_id, status="running")
         self.jobs[job_id] = job
@@ -45,7 +43,7 @@ class SimulationService:
             result = lb_calc.compute(lb_params)
 
             job.status = "completed"
-            job.completed_at = datetime.now(timezone.utc)
+            job.completed_at = datetime.now(UTC)
             job.result = {
                 "type": "link_budget",
                 "snr_db": result.snr_db,
@@ -59,10 +57,10 @@ class SimulationService:
 
         return job
 
-    def get_simulation_status(self, job_id: str) -> Optional[SimulationJob]:
+    def get_simulation_status(self, job_id: str) -> SimulationJob | None:
         return self.jobs.get(job_id)
 
-    def get_simulation_result(self, job_id: str) -> Optional[Dict[str, Any]]:
+    def get_simulation_result(self, job_id: str) -> dict[str, Any] | None:
         job = self.jobs.get(job_id)
         if job and job.status == "completed":
             return job.result
@@ -75,7 +73,7 @@ class SimulationService:
             return True
         return False
 
-    def list_simulations(self) -> List[Dict[str, Any]]:
+    def list_simulations(self) -> list[dict[str, Any]]:
         return [
             {"id": j.id, "status": j.status, "created_at": j.created_at.isoformat()}
             for j in self.jobs.values()

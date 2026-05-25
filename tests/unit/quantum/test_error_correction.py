@@ -1,4 +1,3 @@
-import pytest
 from space_comms_digital_twin.quantum.comms.error_correction import (
     RepetitionCode,
     ShorCode,
