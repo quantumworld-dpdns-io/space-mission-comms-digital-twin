@@ -1,0 +1,22 @@
+name: Quantum Integration Tests
+
+on:
+  schedule:
+    - cron: "0 2 * * *"
+  workflow_dispatch:
+
+jobs:
+  quantum-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install with quantum deps
+        run: |
+          pip install -e ".[dev,quantum]"
+      - name: Run quantum tests
+        run: pytest tests/ -m quantum -v --timeout=120
+      - name: Run benchmarks
+        run: pytest tests/benchmarks/ -v
