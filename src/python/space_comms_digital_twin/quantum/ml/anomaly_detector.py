@@ -70,4 +70,7 @@ class QuantumAnomalyDetector:
     def compute_threshold(self, X: NDArray, contamination: float = 0.1) -> float:
         encoded = self._encode_telemetry(X)
         scores = self.qsvm.decision_function(encoded)
-        return float(np.percentile(scores, int(contamination * 100)))
+        scores = scores[~np.isnan(scores)]
+        if len(scores) == 0:
+            return 0.0
+        return float(np.percentile(scores, max(1, int(contamination * 100))))
