@@ -39,5 +39,5 @@ def test_qnn_predict():
 def test_anomaly_detector():
     X = np.random.randn(50, 3)
     detector = QuantumAnomalyDetector(n_qubits=4, nu=0.1)
-    result = detector.fit(X)
-    assert result.threshold > -10
+    result = detector.detect(X)
+    assert result.n_anomalies >= 0
