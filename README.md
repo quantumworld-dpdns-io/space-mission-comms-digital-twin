@@ -139,3 +139,7 @@ A01-A10 including injection, broken auth, SSRF, crypto failures, and more.
 ## License
 
 [MIT](LICENSE) © 2026 quantumworld-dpdns-io
+
+
+---
+Julia language: [#JuliaLang](https://julialang.org/) | [JuliaLang GitHub](https://github.com/JuliaLang/julia)
